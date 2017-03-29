@@ -1,6 +1,7 @@
 package com.github.sundeepk.compactcalendarview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -144,6 +145,22 @@ public class CompactCalendarView extends View {
         invalidate();
     }
 
+    public void setSelectedTextColor(int selectedTextColor){
+        compactCalendarController.setSelectedTextColor(selectedTextColor);
+        invalidate();
+    }
+    public void setCurrentTextColor(int currentTextColor){
+        compactCalendarController.setCurrentTextColor(currentTextColor);
+        invalidate();
+    }
+   public void setSelectedDayBackgroudBitmap(Bitmap selectedDayBackgroudBitmap){
+       compactCalendarController.setSelectedDayBackgroudBitmap(selectedDayBackgroudBitmap);
+       invalidate();
+    }
+  public void setCurrentDayBackgroudBitmap(Bitmap currentDayBackgroudBitmap){
+       compactCalendarController.setCurrentDayBackgroudBitmap(currentDayBackgroudBitmap);
+      invalidate();
+    }
     public void setCurrentDayBackgroundColor(int currentDayBackgroundColor) {
         compactCalendarController.setCurrentDayBackgroundColor(currentDayBackgroundColor);
         invalidate();
@@ -180,7 +197,7 @@ public class CompactCalendarView extends View {
 
     /**
      * see {@link #addEvent(Event, boolean)} when adding single events
-     * or {@link #addEvents(java.util.List)}  when adding multiple events
+     * or {@link #addEvents(List)}  when adding multiple events
      * @param event
      */
     @Deprecated
@@ -259,7 +276,7 @@ public class CompactCalendarView extends View {
 
     /**
      * see {@link #removeEvent(Event, boolean)} when removing single events
-     * or {@link #removeEvents(java.util.List)} (java.util.List)}  when removing multiple events
+     * or {@link #removeEvents(List)} (java.util.List)}  when removing multiple events
      * @param event
      */
     @Deprecated
