@@ -518,9 +518,11 @@ class CompactCalendarController {
 
     boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         //ignore scrolling callback if already smooth scrolling
+
         if (isSmoothScrolling) {
             return true;
         }
+
 
         if (currentDirection == Direction.NONE) {
             if (Math.abs(distanceX) > Math.abs(distanceY)) {
@@ -573,6 +575,7 @@ class CompactCalendarController {
         handleSmoothScrolling(velocityX);
 
         currentDirection = Direction.NONE;
+
         setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
 
         if (calendarWithFirstDayOfMonth.get(Calendar.MONTH) != currentCalender.get(Calendar.MONTH) && shouldSelectFirstDayOfMonthOnScroll) {

@@ -1,5 +1,7 @@
 package sundeepk.github.com.sample;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,10 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +35,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static android.R.attr.format;
+
 public class CompactCalendarTab extends Fragment {
 
     private static final String TAG = "MainActivity";
@@ -40,7 +46,7 @@ public class CompactCalendarTab extends Fragment {
     private boolean shouldShow = false;
     private CompactCalendarView compactCalendarView;
     private ActionBar toolbar;
-
+    private String date;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.main_tab,container,false);
@@ -65,7 +71,7 @@ public class CompactCalendarTab extends Fragment {
         // compactCalendarView.setCurrentSelectedDayBackgroundColor(getResources().getColor(R.color.dark_red));
         compactCalendarView.setUseThreeLetterAbbreviation(false);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
-
+        date = format.format(new Date());
         loadEvents();
         loadEventsForYear(2017);
         compactCalendarView.invalidate();
@@ -87,9 +93,28 @@ public class CompactCalendarTab extends Fragment {
         //set initial title
         toolbar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+        compactCalendarView.setSelectedTextColor(Color.WHITE);
+        compactCalendarView.setCurrentTextColor(Color.YELLOW);
+        compactCalendarView.setOnRightScrollLimitListener(new CompactCalendarView.OnRightScrollLimitListener() {
+            @Override
+            public boolean isThisMonth() {
+                return CompactCalendarTab.this.isThisMonth(date);
+            }
+
+        });
+        //  不设置背景bitmap会崩溃
+        InputStream is = getResources().openRawResource(R.mipmap.ic_launcher);
+        Bitmap mBitmap = BitmapFactory.decodeStream(is);
+        InputStream isCurrent = getResources().openRawResource(R.mipmap.ic_launcher);
+        Bitmap mBitmapCurrent = BitmapFactory.decodeStream(isCurrent);
+
+        compactCalendarView.setSelectedDayBackgroudBitmap(mBitmap);
+        compactCalendarView.setCurrentDayBackgroudBitmap(mBitmapCurrent);
 
         //set title on calendar scroll
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+
+
             @Override
             public void onDayClick(Date dateClicked) {
                 toolbar.setTitle(dateFormatForMonth.format(dateClicked));
@@ -109,6 +134,7 @@ public class CompactCalendarTab extends Fragment {
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 toolbar.setTitle(dateFormatForMonth.format(firstDayOfNewMonth));
+                date = format.format(firstDayOfNewMonth);
             }
         });
 
@@ -175,7 +201,12 @@ public class CompactCalendarTab extends Fragment {
 
         return v;
     }
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+    public boolean isThisMonth(String date){
 
+        return format.format(new Date()).equals(date);
+
+    }
     @NonNull
     private View.OnClickListener getCalendarShowLis() {
         return new View.OnClickListener() {
